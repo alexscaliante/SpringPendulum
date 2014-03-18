@@ -1,0 +1,81 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <title> Coil Pendulum </title>
+    </head>
+    <body>
+        <canvas id="mycanvas" width="1200" height="650">
+            Your browser does not have support for Canvas.
+        </canvas>
+        <span id="debug"></span>
+        <div id="container" style="float:right">
+            <!-- radio button -->
+            <form>
+                
+                <input type="radio" name="language" id="RadioEngButton"> <span id = "EngLang"> </span>
+                <input type="radio" name="language" id="RadioGerButton"> <span id = "GerLang"> </span>
+            </form>
+            
+            <!-- frequancy slider -->
+            <div id = "freq"> </div>
+            <form oninput="(x.value = parseInt(FreqVal.value))" >
+            <input type="range" id="FreqVal" value="50">  <output name="x" for="FreqVal "></output>
+            </form>
+            <!-- mass slider -->
+            <div id = "mass"> </div>
+            <form oninput="(x.value = parseInt(MassVal.value))" >
+            <input type="range" id="MassVal" value="50">  <output name="x" for="MassVal "></output>
+            <!-- spring-constant slider -->
+            </form>
+             <div id = "stiff"> </div>
+            <form oninput="(x.value = parseInt(StiffVal.value))" >
+            <input type="range" id="StiffVal" value="50">  <output name="x" for="StiffVal "></output>
+            </form>
+            
+            
+        </div>
+        
+        <script type="x-shader/x-vertex" id="vertexShader">
+    
+                varying vec3 vWorldPosition;
+    
+                void main() {
+    
+                        vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+                        vWorldPosition = worldPosition.xyz;
+    
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+    
+                }
+    
+        </script>
+
+        <script type="x-shader/x-fragment" id="fragmentShader">
+
+                uniform vec3 topColor;
+                uniform vec3 bottomColor;
+                uniform float offset;
+                uniform float exponent;
+
+                varying vec3 vWorldPosition;
+
+                void main() {
+
+                        float h = normalize( vWorldPosition + offset ).y;
+                        gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( h, exponent ), 0.0 ) ), 1.0 );
+
+                }
+        </script>
+        
+        <script src="three.min.js"></script>
+        <script src="SpringDynamics.js"></script>
+        <script src="dat.gui.min.js"></script>
+        <script src="parser.js"></script>
+        <!--<script src="OrbitControls.js"></script>-->
+        <script src="TrackballControls.js"></script>
+        <!--<script src="MouseCamController.js"></script>-->
+        <script src="Initialize.js"></script>
+        <script src="main.js"></script>        
+    </body>
+</html>
