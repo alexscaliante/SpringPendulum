@@ -1,41 +1,33 @@
 "use strict";
+
+//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 /* Global Variables */
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+
 // standard global variables
 var scene,camera,renderer;
 // custom global variables
-var controls,mcc,scaleFactor,coilMesh,xFunc,yFunc,zFunc,CoilCon,mirrorSphere,mirrorSphereCamera;
-var springLength = 4; // natural length of coil
-var windingFactor = 40;
-var segments = 500;
-var radiusSegments = 6;
-var tubeRadius = 0.5;
-var offset = 60; // move in y direction 
-// ceiling dimentions
-var ceilingX = 20;
-var ceilingY = 40;
-var ceilingZ = 5;
+var controls,mcc,scaleFactor,springMesh,xFunc,yFunc,zFunc,SpringCon,mirrorSphere,mirrorSphereCamera,ceilingMesh;
 
-var offsetYdirToPlane = -33;
-var offsetYdirToCoil = -60;
-var offsetYdir;
+var SpringPendulumConsts = {
+    ceilingX: 20,
+    ceilingY: 40,
+    ceilingZ: 5,
+    poleX: 10,
+    poleY: 10,
+    poleZ: 90,
+    offsetPlane: -33
+}
 
-// coil shape
-var Coil = /*new*/ THREE.Curve.create(
-    function() {},
-    function(u) 
-    {   // basis Helix shape
-        xFunc = Math.cos(u*windingFactor);
-        zFunc = Math.sin(u*windingFactor);
-        yFunc = springLength*u*(1+SpringMassSystem);
-        return new THREE.Vector3(xFunc, yFunc, zFunc).multiplyScalar(5);// the scalar simply increses the diameter of the coil
-    }
-);
+SpringPendulumConsts.offsetCeiling = SpringPendulumConsts.offsetPlane - 67;
+SpringPendulumConsts.offsetPole = SpringPendulumConsts.offsetPlane - SpringPendulumConsts.poleZ/2;
+
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-
 /* Setup scene, GUI, light and camera controller */
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-function Initialize(){
+
+function Initialize()
+{
     document.getElementById('RadioEngButton').checked = true; // set english as defulte 
     
     var canvas = document.getElementById("mycanvas");
@@ -49,7 +41,7 @@ function Initialize(){
     
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 10000 );
     
-    camera.position.set( -100, -150, 100);
+    camera.position.set( -250, -100, 250);
     
     camera.up.set(0,-1,0);
             
@@ -83,31 +75,34 @@ function Initialize(){
     plane.overdraw = true;
     //scene.add( plane );    
 
-    var CoilController = function() {
+    var SpringController = function() {
         this.Frequency = 0;
         this.Mass = 2;
         this.Stiffness = 7;
     };
+    
     /*
-    CoilCon = new CoilController();
+    SpringCon = new SpringController();
 
     window.onload = function() {
         var gui = new dat.GUI();
-        var CoilFolder = gui.addFolder('Coil Parameters');
-        CoilFolder.add(CoilCon, 'Frequency',0,100);
-        CoilFolder.add(CoilCon, 'Mass',0,1000);
-        CoilFolder.add(CoilCon, 'Stiffness',1,100);
+        var SpringFolder = gui.addFolder('Spring Parameters');
+        SpringFolder.add(SpringCon, 'Frequency',0,100);
+        SpringFolder.add(SpringCon, 'Mass',0,1000);
+        SpringFolder.add(SpringCon, 'Stiffness',1,100);
     }
     */
+    
     // Ground plane
     var groundGeo = new THREE.PlaneGeometry( 10000, 10000 );
     var groundMat = new THREE.MeshPhongMaterial( {ambient: 0x999999, color: 0x999999, specular: 0x101010, side: THREE.DoubleSide } )    
     groundMat.color.setHSL( 0.095, 1, 0.75 );
     var ground = new THREE.Mesh( groundGeo, groundMat );
     ground.rotation.x = Math.PI/2;
-    ground.position.y = offsetYdirToPlane;
+    ground.position.y = SpringPendulumConsts.offsetPlane;
     scene.add( ground );
     ground.receiveShadow = true;
+    
      // SKYDOME
     var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
     hemiLight.color.setHSL( 0.6, 1, 0.6 );
@@ -129,20 +124,19 @@ function Initialize(){
     var sky = new THREE.Mesh( skyGeo, skyMat );
     scene.add( sky );
     
-    // Pole for the coil 
-    var cubeGeometry = new THREE.CubeGeometry( ceilingX, ceilingY, ceilingZ );
-    var cubeGeometry1 = new THREE.CubeGeometry( 10, 10, 75 );
+    // Pole for the spring 
+    var cubeGeometry = new THREE.CubeGeometry( SpringPendulumConsts.ceilingX, SpringPendulumConsts.ceilingY, SpringPendulumConsts.ceilingZ );
+    var cubeGeometry1 = new THREE.CubeGeometry( SpringPendulumConsts.poleX, SpringPendulumConsts.poleY, SpringPendulumConsts.poleZ );
     var cubeMaterial = new THREE.MeshPhongMaterial( { shininess: 20, ambient: 0x555555, color: 0xffffff, specular: 0x111111} );
     //var cubeMaterial = new THREE.MeshLambertMaterial();
-    var ceilingMesh = new THREE.Mesh( cubeGeometry, cubeMaterial );
-    var ceilingMesh1 = new THREE.Mesh( cubeGeometry1, cubeMaterial );
+    ceilingMesh = new THREE.Mesh( cubeGeometry, cubeMaterial );
+    var PoleMesh = new THREE.Mesh( cubeGeometry1, cubeMaterial );
     ceilingMesh.rotation.x = Math.PI/2;
     ceilingMesh.rotation.z = Math.PI/2;
-    ceilingMesh1.rotation.x = Math.PI/2;
-    ceilingMesh.position.set(0,offsetYdirToPlane+offsetYdirToCoil,0);
-    ceilingMesh1.position.set(20,offsetYdirToPlane+offsetYdirToCoil/2,0);
-    
-    scene.add(ceilingMesh1);
+    PoleMesh.rotation.x = Math.PI/2;
+    ceilingMesh.position.set(0,SpringPendulumConsts.offsetCeiling,0);
+    PoleMesh.position.set(20,SpringPendulumConsts.offsetPole,0);
+    scene.add(PoleMesh);
     scene.add(ceilingMesh);
     
     //scene.add(pole);
@@ -160,48 +154,22 @@ function Initialize(){
     //scene.add(spotLight);
     var lightBulb = new THREE.Mesh(new THREE.SphereGeometry(10), new THREE.MeshLambertMaterial({emissive:"#ffff00"}));
     lightBulb.position = spotLight.position;
-    //scene.add(lightBulb);
+    //scene.add(lightBulb); 
     
-    
-    // Chrome mass of the coil
+    // Chrome mass of the spring
     var sphereGeom =  new THREE.SphereGeometry( 10, 100, 100 ); // radius, segmentsWidth, segmentsHeight
     mirrorSphereCamera = new THREE.CubeCamera( 0.01, 10000, 112 );
     scene.add( mirrorSphereCamera );
     var mirrorSphereMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorSphereCamera.renderTarget } );
     mirrorSphere = new THREE.Mesh( sphereGeom, mirrorSphereMaterial );
-    //mirrorSphere.position.y = offsetYdirToPlane;
-    mirrorSphere.position.set(0,offsetYdirToPlane+offsetYdirToCoil+springLength,0);
+   
+    mirrorSphere.position.set(0,SpringPendulumConsts.offsetCeiling+SpringPendulumConsts.springLength,0); // natural position without taking into account the mass
     mirrorSphereCamera.position = mirrorSphere.position;
     mirrorSphere.castShadow = true;
     mirrorSphere.receiveShadow = true;
     scene.add(mirrorSphere);
-    
-    drawCoil();
 }
-//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-/* Draw coil geometry */
-//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-function drawCoil() {
-    var myCoil = new Coil;
-    var tubeGeometry = new THREE.TubeGeometry(myCoil, segments, tubeRadius, radiusSegments);
-    if (coilMesh) {
-	scene.remove( coilMesh );
-    }
-    //tubeGeometry.rotation(Math.PI);
-    coilMesh = new THREE.Mesh( tubeGeometry,new THREE.MeshPhongMaterial({
-        ambient: new THREE.Color().setRGB(0.19225,0.19225,0.19225),
-        specular: new THREE.Color().setRGB(0.508273,0.508273,0.508273),
-        emissive: new THREE.Color().setRGB(0.50754,0.50754,0.50754),
-        shininess: 100,
-        color: 0xf0f0f
-      }));
-    // translation
-    coilMesh.position.set(0,offsetYdirToPlane+offsetYdirToCoil+2.5,0);
-    // rotate by 90 degrees
-    coilMesh.rotation.set(0,Math.PI/2,0);
-    scene.add(coilMesh);
-}
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
 function drawCube(args) {
