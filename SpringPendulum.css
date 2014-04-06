@@ -1,0 +1,65 @@
+body {
+    padding: 0;
+    margin: 0;
+    overflow-y: scroll;
+    font-size: 12px;
+}
+
+#container
+{
+  position: absolute;
+  /*top: 0;*/
+  /*left: 0;*/
+  width: 100%;
+  height: 100%;
+  /*margin: 10px;*/
+  /*padding-bottom:40px;*/
+  /*overflow:hidden;*/
+}
+
+#left {
+    /*padding-right: 10px;*/
+    width: 80%;
+    height: 100%;
+    float: left;
+    /*display:inline-block;*/
+    /*overflow:hidden;*/
+}
+
+#right {
+    /*margin-left: 10px;*/
+    width: 20%;
+    height: 100%;
+    float: left;
+    /*display:inline-block;*/
+    /*overflow:hidden;*/
+}
+
+#canvas-container {
+     margin: 1em;
+     padding: 1em;
+}
+
+.ui-widget {
+    font-size: 12px !important;
+}
+
+.pui-accordion-content {
+    padding: 1em !important;
+}
+
+.jxgbox {
+    height: 200px;
+}
+
+label {
+    font-weight: bold;
+}
+
+#control-buttons {
+    margin-right: 0;
+}
+#control-buttons button {
+    width: 50%;
+    height: 50px;
+}

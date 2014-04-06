@@ -3,41 +3,91 @@
 <html lang="en">
     <head>
         <title>Spring Pendulum</title>
+        <meta charset="utf-8">
+
+        <link rel="stylesheet" type="text/css" href="SpringPendulum.css" />
+             
+        <script src="three.min.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="css/jsxgraph.css" />
+        <script type="text/javascript" src="js/jsxgraphcore.js"></script>
+        
+        <link href="themes/smoothness/jquery-ui-1.10.4.custom.min.css" rel="stylesheet">
+	<link href="themes/bootstrap/theme.css" rel="stylesheet">
+        <link href="css/primeui-1.0-min.css" rel="stylesheet">
+            
+	<script src="js/jquery-1.11.0.min.js"></script>
+	<script src="js/jquery-ui-1.10.4.min.js"></script>
+        <script src="js/primeui-1.0.js"></script>
+        
+        <script type="text/javascript" src="SpringPendulum_UI.js"></script>        
     </head>
-    <body>
-        <canvas id="mycanvas" width="850" height="650">
-            Your browser does not have support for Canvas.
-        </canvas>
-        <span id="debug"></span>
-        <div id="container" style="float:right">
-            <!-- radio button -->
-            <form>
-                
-                <input type="radio" name="language" id="RadioEngButton"> <span id = "EngLang"> </span>
-                <input type="radio" name="language" id="RadioGerButton"> <span id = "GerLang"> </span>
-            </form>
-            
-            <!-- frequancy slider -->
-            <div id = "freq"> </div>
-            <form oninput="(x.value = parseInt(FreqVal.value))" >
-            <input type="range" id="FreqVal" value="50">  <output name="x" for="FreqVal "></output>
-            </form>
-            <!-- mass slider -->
-            <div id = "mass"> </div>
-            <form oninput="(x.value = parseInt(MassVal.value))" >
-            <input type="range" id="MassVal" value="50">  <output name="x" for="MassVal "></output>
-            <!-- spring-constant slider -->
-            </form>
-             <div id = "stiff"> </div>
-            <form oninput="(x.value = parseInt(StiffVal.value))" >
-            <input type="range" id="StiffVal" value="50">  <output name="x" for="StiffVal "></output>
-            </form>
-            
-            
+    <body onresize="resize_canvas()">
+        <div id="container">
+            <div id="left">
+                <div id="canvas-container" class="ui-widget-content ui-corner-all" style="height: calc(100% - 4em - 2px)">
+                    <canvas id="mycanvas" width="600" height="600" style="margin-bottom: -4px">
+                        Your browser does not have support for Canvas.
+                </div>
+            </div>
+            <div id="right">
+                <div style="padding: 1em; padding-left: 0">
+                    <div id="control-buttons">
+                        <button id="button-start">Start</button>
+                        <button id="button-stop">Stop</button>
+                    </div>
+                    <br>
+                    <div id="tabs">
+                        <h3>Parameters</h3>
+                        <div>
+                            <label for="eigenfrequency">Eigenfrequency <i>ω<sub>0</sub></i>:</label>
+                            <input type="text" id="eigenfrequency" readonly style="border: 0">
+                            <div id="eigenfrequency-slider"></div>
+                            <br>
+                            <label for="damping">Damping <i>d</i>:</label>
+                            <input type="text" id="damping" readonly style="border: 0">
+                            <div id="damping-slider"></div>
+                        </div>
+                        
+                        <h3>Initial Conditions / Force</h3>
+                        <div>
+                            <label for="initpos">Initial Position <i>y<sub>0</sub></i>:</label>
+                            <input type="text" id="initpos" readonly style="border: 0">
+                            <div id="initpos-slider"></div>
+                            <br>
+                            <label for="initveloc">Initial Velocity <i>v<sub>0</sub></i>:</label>
+                            <input type="text" id="initveloc" readonly style="border: 0">
+                            <div id="initveloc-slider"></div>
+                            <br>
+                            <label for="extforce-amp">External Force's Amplitude <i>u<sub>0</sub></i>:</label>
+                            <input type="text" id="extforce-amp" readonly style="border: 0">
+                            <div id="extforce-amp-slider"></div>
+                            <br>
+                            <label for="extforce-freq">External Force's Frequency <i>ω<sub>e</sub></i>:</label>
+                            <input type="text" id="extforce-freq" readonly style="border: 0">
+                            <div id="extforce-freq-slider"></div>                            
+                        </div>
+                        
+                        <h3>Time Domain</h3>
+                        <div>
+                            <div id="responseGraph" class="jxgbox"></div>
+                        </div>
+                        
+                        <h3>Frequency Domain</h3>
+                        <div>
+                            <div id="graph3" class="jxgbox"></div>
+                        </div>
+                        
+                        <h3>Pole-Zero Map</h3>
+                        <div>
+                            <div id="graph4" class="jxgbox"></div>
+                        </div>                          
+                    </div>
+                </div>
+            </div>
         </div>
         
-        <script type="x-shader/x-vertex" id="vertexShader">
-    
+        <script type="x-shader/x-vertex" id="vertexShader">    
                 varying vec3 vWorldPosition;
     
                 void main() {
@@ -47,12 +97,10 @@
     
                         gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
     
-                }
-    
+                }    
         </script>
 
         <script type="x-shader/x-fragment" id="fragmentShader">
-
                 uniform vec3 topColor;
                 uniform vec3 bottomColor;
                 uniform float offset;
@@ -67,17 +115,14 @@
 
                 }
         </script>
-        
-        <script src="three.min.js"></script>
-        <script src="SpringDynamics.js"></script>
-        <script src="dat.gui.min.js"></script>
-        
-        <!--<script src="OrbitControls.js"></script>-->
-        <script src="TrackballControls.js"></script>
+
+        <script src="SpringDynamics.js"></script>      
+        <script src="OrbitControls.js"></script>
+        <!--<script src="TrackballControls.js"></script>-->
         <!--<script src="MouseCamController.js"></script>-->
         <script src="Initialize.js"></script>
         <script src="Spring.js"></script>        
         <script src="SpringPendulum.js"></script>
-        <div id="debug"></div>
+        <!--<div id="debug"></div>-->
     </body>
 </html>

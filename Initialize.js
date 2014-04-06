@@ -27,11 +27,9 @@ SpringPendulumConsts.offsetPole = SpringPendulumConsts.offsetPlane - SpringPendu
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
 function Initialize()
-{
-    document.getElementById('RadioEngButton').checked = true; // set english as defulte 
-    
+{ 
     var canvas = document.getElementById("mycanvas");
-    renderer = new THREE.WebGLRenderer({canvas:canvas});
+    renderer = new THREE.WebGLRenderer({canvas:canvas, antialias: true });
     renderer.setSize(canvas.width, canvas.height);
     renderer.setClearColor('rgb(0,0,0)');  // black background
     // Create a new Three.js scene and a camera
@@ -41,16 +39,16 @@ function Initialize()
     
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 10000 );
     
-    camera.position.set( -250, -100, 250);
+    camera.position.set( -150, -100, 150);
     
     camera.up.set(0,-1,0);
             
-    camera.lookAt(new THREE.Vector3(0,-50,0));
+    //camera.lookAt(new THREE.Vector3(0,-50,0));
     
-    controls = new THREE.TrackballControls( camera, canvas );
-    //controls = new THREE.OrbitControls( camera );
+    //controls = new THREE.TrackballControls( camera, canvas );
+    controls = new THREE.OrbitControls( camera, canvas );
     
-    controls.rotateSpeed = 1.0;
+    controls.rotateSpeed = 0.7;
     controls.zoomSpeed = 2;
     controls.panSpeed = 0.8;
     
