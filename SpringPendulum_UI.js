@@ -106,7 +106,11 @@ $(function() {
     $("#extforce-freq").val($("#extforce-freq-slider").slider("value"));
     
     // Disable all sliders for the first time
+<<<<<<< HEAD
     DisableSliders();
+=======
+    disableSliders();
+>>>>>>> github/master
 
     resize_canvas();            
 });
@@ -118,11 +122,15 @@ function CalculateNewSpringDynamics() {
     u0 =  $("#extforce-amp").val(); // amp of external force
     we = $("#extforce-freq").val(); // external frequency
     selectedDynamics = sd.getExtForceFunc(u0,we);
+<<<<<<< HEAD
     responseGraph.Y = selectedDynamics;
     responseGraph.updateCurve();
     responseGraphBoard.update();
     
    
+=======
+    //mySpring = new Spring(selectedDynamics);
+>>>>>>> github/master
 }
 
 function EnableSlider() {
