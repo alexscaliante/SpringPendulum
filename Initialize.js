@@ -16,11 +16,11 @@ var SpringPendulumConsts = {
     poleX: 10,
     poleY: 10,
     poleZ: 90,
-    offsetPlane: -33
+    offsetPlane: 33
 }
 
-SpringPendulumConsts.offsetCeiling = SpringPendulumConsts.offsetPlane - 67;
-SpringPendulumConsts.offsetPole = SpringPendulumConsts.offsetPlane - SpringPendulumConsts.poleZ/2;
+SpringPendulumConsts.offsetCeiling = SpringPendulumConsts.offsetPlane + 67;
+SpringPendulumConsts.offsetPole = SpringPendulumConsts.offsetPlane + SpringPendulumConsts.poleZ/2;
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 /* Setup scene, GUI, light and camera controller */
@@ -32,64 +32,31 @@ function Initialize()
     renderer = new THREE.WebGLRenderer({canvas:canvas, antialias: true });
     renderer.setSize(canvas.width, canvas.height);
     renderer.setClearColor('rgb(0,0,0)');  // black background
-    // Create a new Three.js scene and a camera
+
     scene = new THREE.Scene();
     scene.fog = new THREE.Fog( 0xffffff, 1, 5000 );
     scene.fog.color.setHSL( 0.6, 0, 1 );
-    
+
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 10000 );
-    
-    camera.position.set( -150, -100, 150);
-    
-    camera.up.set(0,-1,0);
-            
-    //camera.lookAt(new THREE.Vector3(0,-50,0));
-    
-    //controls = new THREE.TrackballControls( camera, canvas );
-    controls = new THREE.OrbitControls( camera, canvas );
-    
+    camera.position.set( 150, 100, 150);
+    camera.up.set(0,1,0);
+
+    controls = new THREE.OrbitControls( camera, canvas );    
     controls.rotateSpeed = 0.7;
     controls.zoomSpeed = 2;
     controls.panSpeed = 0.8;
-    
     controls.noZoom = false;
     controls.noPan = false;
-    
     controls.minDistance = 100;
     controls.maxDistance = 400;
-    
     controls.staticMoving = false;
-    //controls.dynamicDampingFactor = 0.3;
-    
     controls.keys = [ 65, 83, 68 ];
-    
-    //controls.addEventListener( 'change', render );
-				
-    //mcc = new MouseCamController(camera, canvas);
-
+   
     // Help plane 
-    var plane = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100 ), new THREE.MeshBasicMaterial( { color: 0xe0e0e0,side: THREE.DoubleSide } ) );
-    plane.position.set(0,0,0);
-    plane.overdraw = true;
-    //scene.add( plane );    
-
-    var SpringController = function() {
-        this.Frequency = 0;
-        this.Mass = 2;
-        this.Stiffness = 7;
-    };
-    
-    /*
-    SpringCon = new SpringController();
-
-    window.onload = function() {
-        var gui = new dat.GUI();
-        var SpringFolder = gui.addFolder('Spring Parameters');
-        SpringFolder.add(SpringCon, 'Frequency',0,100);
-        SpringFolder.add(SpringCon, 'Mass',0,1000);
-        SpringFolder.add(SpringCon, 'Stiffness',1,100);
-    }
-    */
+    // var plane = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100 ), new THREE.MeshBasicMaterial( { color: 0xe0e0e0,side: THREE.DoubleSide } ) );
+    // plane.position.set(0,0,0);
+    // plane.overdraw = true;
+    // scene.add( plane );    
     
     // Ground plane
     var groundGeo = new THREE.PlaneGeometry( 10000, 10000 );
@@ -101,11 +68,11 @@ function Initialize()
     scene.add( ground );
     ground.receiveShadow = true;
     
-     // SKYDOME
+    // SKYDOME
     var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
     hemiLight.color.setHSL( 0.6, 1, 0.6 );
 				hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-				hemiLight.position.set( 0, 500, 0 );
+				hemiLight.position.set( 0, -500, 0 );
 				scene.add( hemiLight );
     var vertexShader = document.getElementById( 'vertexShader' ).textContent;
     var fragmentShader = document.getElementById( 'fragmentShader' ).textContent;
@@ -136,25 +103,12 @@ function Initialize()
     PoleMesh.position.set(20,SpringPendulumConsts.offsetPole,0);
     scene.add(PoleMesh);
     scene.add(ceilingMesh);
-    
-    //scene.add(pole);
-    //pole.castShadow = true;
-    //pole.receiveShadow = true;
-    //pole.castShadow = true;
-    //pole.receiveShadow = true;
 
     // Lighting
     scene.add(new THREE.AmbientLight(0x999999));
-    var spotLight = new THREE.SpotLight();
-    spotLight.position.set(0, -100,-100);
-    spotLight.angle = Math.PI/2;
-    spotLight.castShadow = true;
-    //scene.add(spotLight);
-    var lightBulb = new THREE.Mesh(new THREE.SphereGeometry(10), new THREE.MeshLambertMaterial({emissive:"#ffff00"}));
-    lightBulb.position = spotLight.position;
-    //scene.add(lightBulb); 
     
     // Chrome mass of the spring
+    /*
     var sphereGeom =  new THREE.SphereGeometry( 10, 100, 100 ); // radius, segmentsWidth, segmentsHeight
     mirrorSphereCamera = new THREE.CubeCamera( 0.01, 10000, 112 );
     scene.add( mirrorSphereCamera );
@@ -166,6 +120,17 @@ function Initialize()
     mirrorSphere.castShadow = true;
     mirrorSphere.receiveShadow = true;
     scene.add(mirrorSphere);
+    */
+    var sphereGeom =  new THREE.SphereGeometry( 10, 100, 100 ); // radius, segmentsWidth, segmentsHeight
+    var SphereMaterial = new THREE.MeshBasicMaterial({color: 'black'});
+    mirrorSphere = new THREE.Mesh( sphereGeom, SphereMaterial );
+   
+    mirrorSphere.position.set(0,SpringPendulumConsts.offsetCeiling+SpringPendulumConsts.springLength,0); // natural position without taking into account the mass
+    
+    mirrorSphere.castShadow = true;
+    mirrorSphere.receiveShadow = true;
+    scene.add(mirrorSphere);
+    
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/

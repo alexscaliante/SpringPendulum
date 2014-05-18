@@ -46,18 +46,18 @@ function render(t) {
     //var omega = Math.sqrt(k/m);
     //if (m == 0) 
     //   omega = 0;
-    var ut = -(u0*Math.sin(we*t/1000))
+    var ut = (u0*Math.sin(we*t/1000))
     //SpringMassSystem = sd.getInitCondFunc(x0,v0)(t/500);//Math.abs(Math.cos(omega*t/1000));///
     
-    ceilingMesh.position.set(0,SpringPendulumConsts.offsetCeiling+ut,0);
+    ceilingMesh.position.set(0,(SpringPendulumConsts.offsetCeiling+ut),0);
     
     drawSpring(ut, t);
     
     mirrorSphere.visible = false;
-    mirrorSphereCamera.updateCubeMap( renderer, scene );
+    //mirrorSphereCamera.updateCubeMap( renderer, scene );
     mirrorSphere.visible = true;
     
-    mirrorSphere.position.set(0,SpringPendulumConsts.offsetCeiling+(SpringConsts.springLength*5*(1+selectedDynamics(t/1000)))+12,0);
+    mirrorSphere.position.set(0,(SpringPendulumConsts.offsetCeiling-(SpringConsts.springLength*5*(1+selectedDynamics(t/1000)))-10),0);
     
     //document.getElementById("debug").innerHTML = ""+(SpringConsts.springLength*5*(1+selectedDynamics(t/1000)));
     

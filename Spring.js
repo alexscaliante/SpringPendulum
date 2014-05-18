@@ -21,7 +21,7 @@ var SpringCurve = THREE.Curve.create(
 	zFunc = Math.sin(u*SpringConsts.windingFactor)*5;
 	yFunc = (SpringConsts.springLength-(this.anchorDisplacement/5)) * u * (1+this.dynamics(this.t))/* 
 		(((SpringConsts.springLength * (1+this.dynamics(this.t))) - this.anchorDisplacement) / (SpringConsts.springLength*(1+this.dynamics(this.t))))*/;
-	yFunc *= 5;	
+	yFunc *= -5;	
 	return new THREE.Vector3(xFunc, yFunc, zFunc);// the scalar simply increses the diameter of the spring
     }
 );
@@ -62,8 +62,8 @@ function drawSpring(ut, t)
       }));
     
     // translation
-    springMesh.position.set(0,SpringPendulumConsts.offsetCeiling+SpringPendulumConsts.ceilingZ/2+ut,0);
+    springMesh.position.set(0,SpringPendulumConsts.offsetCeiling-SpringPendulumConsts.ceilingZ/2+ut,0);
     // rotate by 90 degrees
-    springMesh.rotation.set(0,Math.PI/2,0);
+    springMesh.rotation.set(0,Math.PI,0);
     scene.add(springMesh);
 }
