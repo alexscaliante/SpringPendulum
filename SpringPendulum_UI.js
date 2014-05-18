@@ -18,19 +18,34 @@ $(function() {
     });
     
     // init buttons
-    
     $("#control-buttons").buttonset();
-    $("#button-start").button( "option", "icons", { primary: "ui-icon-play" } );
-    $("#button-stop").button( "option", "icons", { primary: "ui-icon-stop" } );
+    
+    $("#button-start").button({
+        icons: { primary: "ui-icon-play"}
+    }).click( function(event){
+        
+        DisableSliders();
+        CalculateNewSpringDynamics();
+        renderflag = 1;
+    });
+    
+    $("#button-stop").button({
+        icons: { primary: "ui-icon-stop"}
+    }).click( function(event){
+        
+        EnableSlider();
+        renderflag = 0;
+    });
     
     // init sliders
-    $("#eigenfrequency-slider").slider({
+    $("#eigenfrequency-slider").slider({ 
         value:1,
         min: 0.1,
         max: 10,
         step: 0.1,
         slide: function( event, ui ) {
             $("#eigenfrequency").val(ui.value);
+           
         }
     });
     $("#eigenfrequency").val($("#eigenfrequency-slider").slider("value"));
@@ -88,6 +103,39 @@ $(function() {
             $("#extforce-freq").val(ui.value);
         }
     });
-    $("#extforce-freq").val($("#extforce-freq-slider").slider("value"));        
+    $("#extforce-freq").val($("#extforce-freq-slider").slider("value"));
+    
+    // Disable all sliders for the first time
+    disableSliders();
+
     resize_canvas();            
 });
+function CalculateNewSpringDynamics() {
+    
+    w0 = $("#eigenfrequency").val(); // eigen-frequency
+    d =  $("#damping").val();        // damping
+    sd = new SpringDynamics(w0, d);
+    u0 =  $("#extforce-amp").val(); // amp of external force
+    we = $("#extforce-freq").val(); // external frequency
+    selectedDynamics = sd.getExtForceFunc(u0,we);
+    //mySpring = new Spring(selectedDynamics);
+}
+
+function EnableSlider() {
+    $("#eigenfrequency-slider").slider("enable");
+    $("#damping-slider").slider("enable");
+    $("#initpos-slider").slider("enable");
+    $("#initveloc-slider").slider("enable");
+    $("#extforce-amp-slider").slider("enable");
+    $("#extforce-freq-slider").slider("enable");
+
+}
+function DisableSliders() {
+    $("#eigenfrequency-slider").slider("disable");
+    $("#damping-slider").slider("disable");
+    $("#initpos-slider").slider("disable");
+    $("#initveloc-slider").slider("disable");
+    $("#extforce-amp-slider").slider("disable");
+    $("#extforce-freq-slider").slider("disable");
+    
+}
