@@ -7,9 +7,10 @@
 // standard global variables
 var scene,camera,renderer;
 // custom global variables
-var controls,mcc,scaleFactor,springMesh,xFunc,yFunc,zFunc,SpringCon,mirrorSphere,mirrorSphereCamera,ceilingMesh;
+var controls,mcc,scaleFactor,springMesh,xFunc,yFunc,zFunc,SpringCon,mirrorSphere,mirrorSphereCamera,ceilingMesh,runningFlag,startTime,staticRendered;
 
 var SpringPendulumConsts = {
+    ballRadius: 10,
     ceilingX: 20,
     ceilingY: 40,
     ceilingZ: 5,
@@ -27,7 +28,9 @@ SpringPendulumConsts.offsetPole = SpringPendulumConsts.offsetPlane + SpringPendu
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
 function Initialize()
-{ 
+{
+    runningFlag = true;
+    
     var canvas = document.getElementById("mycanvas");
     renderer = new THREE.WebGLRenderer({canvas:canvas, antialias: true });
     renderer.setSize(canvas.width, canvas.height);
@@ -38,8 +41,8 @@ function Initialize()
     scene.fog.color.setHSL( 0.6, 0, 1 );
 
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 10000 );
-    camera.position.set( 150, 100, 150);
-    camera.up.set(0,1,0);
+    camera.position.set( -100, 125, -100);
+    //camera.up.set(0,1,0);
 
     controls = new THREE.OrbitControls( camera, canvas );    
     controls.rotateSpeed = 0.7;
@@ -51,6 +54,7 @@ function Initialize()
     controls.maxDistance = 400;
     controls.staticMoving = false;
     controls.keys = [ 65, 83, 68 ];
+    controls.target.set(0, 80, 0); 
    
     // Help plane 
     // var plane = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100 ), new THREE.MeshBasicMaterial( { color: 0xe0e0e0,side: THREE.DoubleSide } ) );
@@ -107,9 +111,8 @@ function Initialize()
     // Lighting
     scene.add(new THREE.AmbientLight(0x999999));
     
-    // Chrome mass of the spring
-    /*
-    var sphereGeom =  new THREE.SphereGeometry( 10, 100, 100 ); // radius, segmentsWidth, segmentsHeight
+    // Chrome mass of the sprin
+    var sphereGeom =  new THREE.SphereGeometry( SpringPendulumConsts.ballRadius, 100, 100 ); // radius, segmentsWidth, segmentsHeight
     mirrorSphereCamera = new THREE.CubeCamera( 0.01, 10000, 112 );
     scene.add( mirrorSphereCamera );
     var mirrorSphereMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorSphereCamera.renderTarget } );
@@ -120,8 +123,9 @@ function Initialize()
     mirrorSphere.castShadow = true;
     mirrorSphere.receiveShadow = true;
     scene.add(mirrorSphere);
-    */
-    var sphereGeom =  new THREE.SphereGeometry( 10, 100, 100 ); // radius, segmentsWidth, segmentsHeight
+    /*
+    // no chrome
+    var sphereGeom =  new THREE.SphereGeometry( SpringPendulumConsts.ballRadius, 100, 100 ); // radius, segmentsWidth, segmentsHeight
     var SphereMaterial = new THREE.MeshBasicMaterial({color: 'black'});
     mirrorSphere = new THREE.Mesh( sphereGeom, SphereMaterial );
    
@@ -130,7 +134,7 @@ function Initialize()
     mirrorSphere.castShadow = true;
     mirrorSphere.receiveShadow = true;
     scene.add(mirrorSphere);
-    
+    */
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
