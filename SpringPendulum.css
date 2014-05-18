@@ -63,3 +63,8 @@ label {
     width: 50%;
     height: 50px;
 }
+
+.sliders > input {
+    border: 0;
+    width: 30px;
+}

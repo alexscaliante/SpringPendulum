@@ -7,7 +7,7 @@
 
         <link rel="stylesheet" type="text/css" href="SpringPendulum.css" />
              
-        <script src="three.min.js"></script>
+        <script src="js/three.min.js"></script>
         
         <link rel="stylesheet" type="text/css" href="css/jsxgraph.css" />
         <script type="text/javascript" src="js/jsxgraphcore.js"></script>
@@ -39,32 +39,32 @@
                     <br>
                     <div id="tabs">
                         <h3>Parameters</h3>
-                        <div>
+                        <div class="sliders">
                             <label for="eigenfrequency">Eigenfrequency <i>ω<sub>0</sub></i>:</label>
-                            <input type="text" id="eigenfrequency" readonly style="border: 0">
+                            <input type="text" id="eigenfrequency" readonly>
                             <div id="eigenfrequency-slider"></div>
                             <br>
                             <label for="damping">Damping <i>d</i>:</label>
-                            <input type="text" id="damping" readonly style="border: 0">
+                            <input type="text" id="damping" readonly>
                             <div id="damping-slider"></div>
                         </div>
                         
                         <h3>Initial Conditions / Force</h3>
-                        <div>
+                        <div class="sliders">
                             <label for="initpos">Initial Position <i>y<sub>0</sub></i>:</label>
-                            <input type="text" id="initpos" readonly style="border: 0">
+                            <input type="text" id="initpos" readonly>
                             <div id="initpos-slider"></div>
                             <br>
                             <label for="initveloc">Initial Velocity <i>v<sub>0</sub></i>:</label>
-                            <input type="text" id="initveloc" readonly style="border: 0">
+                            <input type="text" id="initveloc" readonly>
                             <div id="initveloc-slider"></div>
                             <br>
                             <label for="extforce-amp">External Force's Amplitude <i>u<sub>0</sub></i>:</label>
-                            <input type="text" id="extforce-amp" readonly style="border: 0">
+                            <input type="text" id="extforce-amp" readonly>
                             <div id="extforce-amp-slider"></div>
                             <br>
                             <label for="extforce-freq">External Force's Frequency <i>ω<sub>e</sub></i>:</label>
-                            <input type="text" id="extforce-freq" readonly style="border: 0">
+                            <input type="text" id="extforce-freq" readonly>
                             <div id="extforce-freq-slider"></div>                            
                         </div>
                         
@@ -119,7 +119,6 @@
         <script src="SpringDynamics.js"></script>      
         <script src="OrbitControls.js"></script>
         <!--<script src="TrackballControls.js"></script>-->
-        <!--<script src="MouseCamController.js"></script>-->
         <script src="Initialize.js"></script>
         <script src="Spring.js"></script>        
         <script src="SpringPendulum.js"></script>
