@@ -35,7 +35,7 @@ body {
     /*overflow:hidden;*/
 }
 
-#canvas-container {
+#canvas-container, #explanationText {
      margin: 1em;
      padding: 1em;
 }
