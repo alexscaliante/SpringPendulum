@@ -238,7 +238,9 @@ SpringDynamics.prototype.getPositionFunc = function(u0, we, y0, v0) {
  * @this {SpringDynamics}
  * @returns {function} function func w of a single parameter w giving the magnitude response
  */
-SpringDynamics.prototype.getMagRespFunc = function() {
+SpringDynamics.prototype.getMagRespFunc = function(dB) {
+
+    if(dB===undefined) dB = true;
 
     var ret;
     var w02 = this.w0*this.w0;
@@ -246,7 +248,6 @@ SpringDynamics.prototype.getMagRespFunc = function() {
 
     // the dB flag indicates whether or not to return a logarithmic magnitude response
     ret = function(w, dB) {
-        if(dB===undefined) dB = true;
         var w2 = w*w;
         var absH = w02 / Math.sqrt((4*d2-2)*w02*w2 + w2*w2 + w02*w02);
         if(dB) {
@@ -265,7 +266,7 @@ SpringDynamics.prototype.getMagRespFunc = function() {
  * @this {SpringDynamics}
  * @returns {function} function func w of a single parameter w giving the phase response
  */
-SpringDynamics.prototype.getPhaseRespFunc = function(dB) {
+SpringDynamics.prototype.getPhaseRespFunc = function() {
     var ret;
     var w0 = this.w0;
     var d = this.d;
