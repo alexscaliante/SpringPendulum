@@ -6,19 +6,19 @@
         <meta charset="utf-8">
 
         <link rel="stylesheet" type="text/css" href="SpringPendulum.css" />
-             
-        <script src="js/three.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="css/jsxgraph.css" />
-        <script type="text/javascript" src="js/jsxgraphcore.js"></script>
+                
         <link href="themes/smoothness/jquery-ui-1.10.4.custom.min.css" rel="stylesheet">
         <link href="themes/bootstrap/theme.css" rel="stylesheet">
         <link href="css/primeui-1.0-min.css" rel="stylesheet">
-            
+        <link rel="stylesheet" type="text/css" href="css/jsxgraph.css" />
+    
+        <script src="js/three.min.js"></script>
+        <script type="text/javascript" src="js/jsxgraphcore.js"></script>
         <script src="js/jquery-1.11.0.min.js"></script>
         <script src="js/jquery-ui-1.10.4.min.js"></script>
         <script src="js/primeui-1.0.js"></script>
         
-        <script type="text/javascript" src="SpringPendulum_UI.js"></script>        
+        <script type="text/javascript" src="SpringPendulum_UI.js"></script>
     </head>
     <body onresize="resize_canvas()">
         <div id="container">
@@ -27,14 +27,13 @@
                     <canvas id="mycanvas" width="600" height="600" style="margin-bottom: -4px">
                         Your browser does not have support for Canvas.
                 </div>
-		<div id="explanationText" class="ui-widget-content ui-corner-all">
-		
-		<h3> Explenation </h3>
-		    You text here!
-		</div>
+                <div id="explanationText" class="ui-widget-content ui-corner-all">
+                    <h3> Explenation </h3>
+                    You text here!
+                </div>
             </div>
-	    
-	    <div id="right">
+        
+            <div id="right">
                 <div style="padding: 1em; padding-left: 0">
                     <div id="debug"></div>
                     <div id="control-buttons">
@@ -91,12 +90,12 @@
                 </div>
             </div>
         </div>
-	
-	<div id="dialog-message" title="Warning">
-	    <p>	
-		The mass hit the ceiling! Please reset.
-	    </p>
-	</div>
+    
+        <div id="dialog-message" title="Warning">
+            <p> 
+            The mass hit the ceiling! Please reset.
+            </p>
+        </div>
 
         <script type="x-shader/x-vertex" id="vertexShader">    
                 varying vec3 vWorldPosition;
@@ -107,7 +106,6 @@
                         gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
                 }    
         </script>
-	
         <script type="x-shader/x-fragment" id="fragmentShader">
                 uniform vec3 topColor;
                 uniform vec3 bottomColor;
