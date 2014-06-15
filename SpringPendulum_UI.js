@@ -17,6 +17,15 @@ $(function() {
         multiple: true
     });
     
+    $("#dialog-message").dialog({
+        autoOpen: false,
+        buttons: {
+            Ok: function() {
+                $( this ).dialog( "close" );
+            }
+        }
+    }); 
+    
     // init buttons
     $("#control-buttons").buttonset();
     
@@ -50,10 +59,14 @@ $(function() {
             $("#eigenfrequency").val(ui.value);
             SpringPendulumParams.changeParam("w0",ui.value);
             $("#initveloc-slider").slider("option", "min", SpringConsts.springLength * ui.value * -0.4);
-            $("#initveloc-slider").slider("option", "max", SpringConsts.springLength * ui.value * 0.4)
+            $("#initveloc-slider").slider("option", "max", SpringConsts.springLength * ui.value * 0.4);
+            
             if ($("#initveloc-slider").slider("option","value") > $("#initveloc-slider").slider("option","max")) {
-                $("#initveloc-slider").slider("option","value",$("#initveloc-slider").slider("option","max"));
-            } else if ($("#initveloc-slider").slider("option","value") < $("#initveloc-slider").slider("option","min")) {
+                
+                $("#initveloc-slider").slider("option","value",$("#initveloc-slider").slider("option","max"));    
+            }
+            else if ($("#initveloc-slider").slider("option","value") < $("#initveloc-slider").slider("option","min")) {
+
                 $("#initveloc-slider").slider("option","value",$("#initveloc-slider").slider("option","min"));
             }
             updateSpringDynamics();

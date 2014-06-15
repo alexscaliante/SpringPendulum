@@ -1,6 +1,7 @@
 var SpringConsts = {
     // Spring constants
-    springLength:	20, 	// natural length of spring
+    springLength:	20, 	// natural spring length
+    springRadius:	5,
     windingFactor:	40,
     segments:		100,
     radiusSegments:	6,
@@ -16,11 +17,11 @@ var SpringCurve = THREE.Curve.create(
     },
     function(u) 
     {
-		// basic Helix shape
-		xFunc = Math.cos(u*SpringConsts.windingFactor) * (SpringConsts.springLength/4);
-		zFunc = Math.sin(u*SpringConsts.windingFactor) * (SpringConsts.springLength/4);
-		yFunc = - (SpringConsts.springLength + this.anchorDisplacement - this.dynamics(this.t)) * u;
-		return new THREE.Vector3(xFunc, yFunc, zFunc);
+	// basic Helix shape
+	xFunc = Math.cos(u*SpringConsts.windingFactor) * (SpringConsts.springRadius);
+	zFunc = Math.sin(u*SpringConsts.windingFactor) * (SpringConsts.springRadius);
+	yFunc = - (SpringConsts.springLength + this.anchorDisplacement - this.dynamics(this.t)) * u;
+	return new THREE.Vector3(xFunc, yFunc, zFunc);
     }
 );
 
@@ -56,10 +57,6 @@ function drawSpring(ut, t)
     }
     
     springMesh = new THREE.Mesh( tubeGeometry,new THREE.MeshPhongMaterial({
-        //ambient: new THREE.Color().setRGB(0.19225,0.19225,0.19225),
-        //specular: new THREE.Color().setRGB(0.508273,0.508273,0.508273),
-        //emissive: new THREE.Color().setRGB(0.50754,0.50754,0.50754),
-        //shininess: 100,
         color: 0x0f0f0f
       }));
     

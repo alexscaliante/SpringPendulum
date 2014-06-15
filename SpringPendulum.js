@@ -4,13 +4,13 @@ var SpringMassSystem;
 Initialize();
 
 var SpringPendulumParams = {
-    w0: 2,                              // eigen-frequency
+    w0: 1.9,                            // eigen-frequency
     d : 0.1,                            // dimensionless friction constant | d > 1 means strong friction (no oscillations) and d < 1 means low friction.
     
     y0: 0,//1.2,                        // initial condition - position
     v0: 0,//-1,                         // initial condition - velocity
 
-    u0: SpringConsts.springLength*0.4,  // amp of suspension point
+    u0: 5,  // amp of suspension point
     we: 3                               // external frequency
 };
 
@@ -30,8 +30,6 @@ SpringPendulumParams.changeParam = function(param, value) {
 }
 
 var sd = new SpringDynamics(SpringPendulumParams.w0, SpringPendulumParams.d);
-//var selectedDynamics = sd.getInitCondFunc(SpringPendulumParams.y0,SpringPendulumParams.v0);
-//var selectedDynamics = sd.getExtForceFunc(SpringPendulumParams.u0,SpringPendulumParams.we);
 var selectedDynamics = sd.getPositionFunc(SpringPendulumParams.u0,SpringPendulumParams.we,SpringPendulumParams.y0,SpringPendulumParams.v0);
 var mySpring = new Spring(selectedDynamics);
 
@@ -174,6 +172,11 @@ function render(t) {
         ceilingMesh.position.set(0,(SpringPendulumConsts.offsetCeiling+ut),0);
         
         var springSize = drawSpring(ut, t);
+        
+        if ((springSize+(SpringPendulumConsts.ceilingZ/2))>=0) { // look for the ponit where the mass hits the ceiling
+            $("#dialog-message").dialog("open");// display a warning text        
+            $("#button-stop").click();// handel this event as the Stop button was pushed
+        }
         
         mirrorSphere.visible = false;
         mirrorSphereCamera.updateCubeMap( renderer, scene );
