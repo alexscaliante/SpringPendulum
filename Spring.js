@@ -10,17 +10,17 @@ var SpringConsts = {
 var SpringCurve = THREE.Curve.create(
     function(anchorDisplacement, dynamics, t)
     {
-	this.anchorDisplacement = anchorDisplacement;
-	this.t = t;
-	this.dynamics = dynamics;
+		this.anchorDisplacement = anchorDisplacement;
+		this.t = t;
+		this.dynamics = dynamics;
     },
     function(u) 
     {
-	// basic Helix shape
-	xFunc = Math.cos(u*SpringConsts.windingFactor) * (SpringConsts.springLength/4);
-	zFunc = Math.sin(u*SpringConsts.windingFactor) * (SpringConsts.springLength/4);
-	yFunc = - (SpringConsts.springLength + this.anchorDisplacement - this.dynamics(this.t)) * u;
-	return new THREE.Vector3(xFunc, yFunc, zFunc);
+		// basic Helix shape
+		xFunc = Math.cos(u*SpringConsts.windingFactor) * (SpringConsts.springLength/4);
+		zFunc = Math.sin(u*SpringConsts.windingFactor) * (SpringConsts.springLength/4);
+		yFunc = - (SpringConsts.springLength + this.anchorDisplacement - this.dynamics(this.t)) * u;
+		return new THREE.Vector3(xFunc, yFunc, zFunc);
     }
 );
 
@@ -50,7 +50,7 @@ Spring.prototype.updateDynamics = function(dynamics)
    
 function drawSpring(ut, t)
 {
-    var tubeGeometry = new THREE.TubeGeometry(mySpring.genGeometry(ut, t/1000), SpringConsts.segments, SpringConsts.tubeRadius, SpringConsts.radiusSegments);
+    var tubeGeometry = new THREE.TubeGeometry(mySpring.genGeometry(ut, t), SpringConsts.segments, SpringConsts.tubeRadius, SpringConsts.radiusSegments);
     if (springMesh) {
 	scene.remove( springMesh );
     }

@@ -13,7 +13,7 @@ function resize_canvas()
 
 $(function() {
     $("#tabs").puiaccordion({
-        activeIndex: [0,1,2],
+        activeIndex: [0,1,2,3,4],
         multiple: true
     });
     
@@ -36,7 +36,7 @@ $(function() {
         $(this).button("disable");
         $(this).prev().button("enable");
         startTime = undefined;
-        enableSlider();
+        enableSliders();
         runningFlag = false;
     });
         
@@ -125,13 +125,13 @@ $(function() {
         }
     });
     $("#extforce-freq").val($("#extforce-freq-slider").slider("value"));
-    
+     
     // Disable all sliders for the first time
     disableSliders();
     resize_canvas();            
 });
 
-function enableSlider() {
+function enableSliders() {
     $("#eigenfrequency-slider").slider("enable");
     $("#damping-slider").slider("enable");
     $("#initpos-slider").slider("enable");
