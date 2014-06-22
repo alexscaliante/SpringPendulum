@@ -247,7 +247,7 @@ SpringDynamics.prototype.getMagRespFunc = function(dB) {
     var d2 = this.d*this.d;
 
     // the dB flag indicates whether or not to return a logarithmic magnitude response
-    ret = function(w, dB) {
+    ret = function(w) {
         var w2 = w*w;
         var absH = w02 / Math.sqrt((4*d2-2)*w02*w2 + w2*w2 + w02*w02);
         if(dB) {
