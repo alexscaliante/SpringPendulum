@@ -17,13 +17,20 @@ $(function() {
         multiple: true
     });
     
-    $("#dialog-message").dialog({
-        autoOpen: false,
-        buttons: {
-            Ok: function() {
-                $( this ).dialog( "close" );
-            }
-        }
+    $("#dialog-message").puidialog({
+        //autoOpen: false,
+        showEffect: 'fade',  
+        hideEffect: 'fade',  
+        minimizable: false,  
+        maximizable: false,          
+        buttons: [{  
+                    text: 'OK',  
+                    //icon: 'ui-icon-check',  
+                    click: function(p1,p2) {
+                        $("#dialog-message").puidialog("hide");
+                    }
+                }],            
+        resizable: false
     }); 
     
     // init buttons

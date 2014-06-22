@@ -85,3 +85,12 @@ body {
 .graphToolbar label.ui-state-active {
     font-weight: bold;
 }
+
+.pui-dialog .pui-dialog-titlebar {
+    padding: .5em .4em .5em 1em !important;
+}
+
+.pui-dialog .pui-dialog-buttonpane {
+    text-align: right !important;
+    padding: .3em .4em .5em 1em !important;
+}

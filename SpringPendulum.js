@@ -335,8 +335,8 @@ function render(t) {
         var springSize = drawSpring(ut, t);
         
         if ((springSize+(SpringPendulumConsts.ceilingZ/2))>=0) { // look for the ponit where the mass hits the ceiling
-            $("#dialog-message").dialog("open");// display a warning text        
-            $("#button-stop").click();// handel this event as the Stop button was pushed
+            $("#dialog-message").puidialog("show"); // display a warning text
+            $("#button-stop").click(); // handel this event as the Stop button was pushed
         }
         
         mirrorSphere.visible = false;
