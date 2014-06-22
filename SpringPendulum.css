@@ -52,7 +52,7 @@ body {
     height: 200px;
 }
 
-label {
+.sliders > label {
     font-weight: bold;
 }
 
@@ -67,4 +67,21 @@ label {
 .sliders > input {
     border: 0;
     width: 30px;
+}
+
+.graphToolbar {
+    padding: 2px;
+    /*display: inline-block;*/
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    z-index: 999;
+}
+
+.graphToolbar label > span {
+    font-size: 9px;
+}
+
+.graphToolbar label.ui-state-active {
+    font-weight: bold;
 }

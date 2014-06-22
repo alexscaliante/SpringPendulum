@@ -74,12 +74,25 @@
                         
                         <h3>Time Domain</h3>
                         <div>
+                            <div id="timeDomainToolbar" class="graphToolbar ui-widget-header ui-corner-all">                                                            
+                                <input type="checkbox" id="timedomain-follow"><label for="timedomain-follow">Follow</label>                                
+                            </div> 
                             <div id="timeDomainGraph" class="jxgbox"></div>
                         </div>
                         
                         <h3>Frequency Domain</h3>
                         <div>
-                            <div id="freqDomainGraph" class="jxgbox"></div>
+                            <div id="freqDomainToolbar" class="graphToolbar ui-widget-header ui-corner-all">                                                            
+                                <span id="freqdomain-mag-phase">
+                                    <input type="radio" id="freqdomain-mag" name="freqdomain-mag-phase" checked="checked"><label for="freqdomain-mag">Mag.</label>
+                                    <input type="radio" id="freqdomain-phase" name="freqdomain-mag-phase"><label for="freqdomain-phase">Phase</label>
+                                </span>
+                                
+                                <input type="checkbox" id="freqdomain-mag-db"><label for="freqdomain-mag-db">dB</label>                                
+                            </div>                            
+                            <div id="freqDomainMagGraph" class="jxgbox"></div>
+                            <div id="freqDomainMagDbGraph" class="jxgbox"></div>
+                            <div id="freqDomainPhaseGraph" class="jxgbox"></div>
                         </div>
                         
                         <h3>Pole-Zero Map</h3>

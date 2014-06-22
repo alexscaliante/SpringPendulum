@@ -138,6 +138,35 @@ $(function() {
         }
     });
     $("#extforce-freq").val($("#extforce-freq-slider").slider("value"));
+    
+    $("#freqdomain-mag-phase").buttonset();
+    $("#freqdomain-mag").click(function() {
+        $("#freqdomain-mag-db").button("enable");
+        $("#freqDomainPhaseGraph").hide();
+        $("#freqDomainMag"+(($("#freqdomain-mag-db").prop("checked") == true) ? "Db" : "")+"Graph").show();
+        updateSpringDynamics();        
+    });
+    $("#freqdomain-phase").click(function() {        
+        $("#freqdomain-mag-db").button("disable");
+        $("#freqDomainMagGraph").hide();
+        $("#freqDomainMagDbGraph").hide();
+        $("#freqDomainPhaseGraph").show();
+        updateSpringDynamics();        
+    });
+    $("#freqdomain-mag-db").button().click(function() {
+        if ($(this).prop("checked") == true) {
+            $("#freqDomainMagGraph").hide();
+            $("#freqDomainMagDbGraph").show();
+        } else {
+            $("#freqDomainMagDbGraph").hide();            
+            $("#freqDomainMagGraph").show();
+        }
+        updateSpringDynamics();        
+    });
+    
+    $("#timedomain-follow").button().click(function() {
+        timeDomainFollow = $(this).prop("checked");
+    });    
      
     // Disable all sliders for the first time
     disableSliders();

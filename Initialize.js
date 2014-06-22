@@ -7,7 +7,7 @@
 // standard global variables
 var scene,camera,renderer;
 // custom global variables
-var controls,springMesh,xFunc,yFunc,zFunc,SpringCon,mirrorSphere,mirrorSphereCamera,ceilingMesh,runningFlag,startTime,staticRendered;
+var controls,springMesh,xFunc,yFunc,zFunc,SpringCon,mirrorSphere,mirrorSphereCamera,ceilingMesh,runningFlag,startTime,staticRendered,timeDomainFollow;
 
 var SpringPendulumConsts = {
     ballRadius: 10,
@@ -29,7 +29,8 @@ SpringPendulumConsts.offsetPole = SpringPendulumConsts.offsetPlane + SpringPendu
 
 function Initialize()
 {
-    runningFlag = true; // start the animation when page get loaded 
+    runningFlag = true; // start the animation when page get loaded
+    timeDomainFollow = false;
     
     var canvas = document.getElementById("mycanvas");
    
