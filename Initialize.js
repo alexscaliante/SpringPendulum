@@ -5,9 +5,9 @@
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
 // standard global variables
-var scene,camera,renderer;
+var scene,camera,renderer,controls;
 // custom global variables
-var controls,springMesh,xFunc,yFunc,zFunc,SpringCon,mirrorSphere,mirrorSphereCamera,ceilingMesh,runningFlag,startTime,staticRendered,timeDomainFollow;
+var springMesh,mirrorSphere,mirrorSphereCamera,ceilingMesh,runningFlag,startTime,staticRendered,timeDomainFollow;
 
 var SpringPendulumConsts = {
     ballRadius: 10,

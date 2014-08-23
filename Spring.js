@@ -17,11 +17,11 @@ var SpringCurve = THREE.Curve.create(
     },
     function(u) 
     {
-    // basic Helix shape
-    xFunc = Math.cos(u*SpringConsts.windingFactor) * (SpringConsts.springRadius);
-    zFunc = Math.sin(u*SpringConsts.windingFactor) * (SpringConsts.springRadius);
-    yFunc = - (SpringConsts.springLength + this.anchorDisplacement - this.dynamics(this.t)) * u;
-    return new THREE.Vector3(xFunc, yFunc, zFunc);
+        // basic Helix shape
+        xFunc = Math.cos(u*SpringConsts.windingFactor) * (SpringConsts.springRadius);
+        zFunc = Math.sin(u*SpringConsts.windingFactor) * (SpringConsts.springRadius);
+        yFunc = - (SpringConsts.springLength + this.anchorDisplacement - this.dynamics(this.t)) * u;
+        return new THREE.Vector3(xFunc, yFunc, zFunc);
     }
 );
 
