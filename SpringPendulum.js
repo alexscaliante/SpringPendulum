@@ -34,6 +34,7 @@ var selectedDynamics = sd.getPositionFunc(SpringPendulumParams.u0,SpringPendulum
 var mySpring = new Spring(selectedDynamics);
 
 // init graphs
+var graphBoardsArray = new Array();
 var timeDomainGraphBoard = JXG.JSXGraph.initBoard('timeDomainGraph',
                                 {boundingbox:[-0.1, 10, 20, -10],
                                 keepaspectratio: false,
@@ -46,6 +47,7 @@ var timeDomainGraphBoard = JXG.JSXGraph.initBoard('timeDomainGraph',
                                 },
                                 showCopyright: false,
                                 showNavigation: true});
+graphBoardsArray.push(timeDomainGraphBoard);
 
 var timeDomainGraph = timeDomainGraphBoard.create('functiongraph',
                                                   [selectedDynamics, 0],
@@ -78,8 +80,6 @@ var timeDomainExtForceGlider = timeDomainGraphBoard.create('point',
                                                            withLabel: false,
                                                            showInfobox: false});
 
-timeDomainGraphBoard.zoom100();
-
 var freqDomainMagGraphBoard = JXG.JSXGraph.initBoard('freqDomainMagGraph',
                                 {boundingbox:[-0.1, 10, 10, -10],
                                 keepaspectratio: false,
@@ -92,12 +92,11 @@ var freqDomainMagGraphBoard = JXG.JSXGraph.initBoard('freqDomainMagGraph',
                                 },
                                 showCopyright: false,
                                 showNavigation: true});
+graphBoardsArray.push(freqDomainMagGraphBoard);
 
 var freqDomainMagGraph = freqDomainMagGraphBoard.create('functiongraph',
             [sd.getMagRespFunc(false), 0],
             {strokeColor:'blue', strokeWidth:2, highlight: false});
-
-freqDomainMagGraphBoard.zoom100();
 
 var freqDomainMagDbGraphBoard = JXG.JSXGraph.initBoard('freqDomainMagDbGraph',
                                 {boundingbox:[-2, 50, 2, -50],
@@ -201,7 +200,6 @@ var freqDomainMagDbGraph = freqDomainMagDbGraphBoard.create('curve',
                         sd.getMagRespFunc(true),
                         -100,100],{strokeColor:'blue', strokeWidth:2, highlight: false});
 
-freqDomainMagDbGraphBoard.zoom100();
 $("#freqDomainMagDbGraph").hide();
 
 var freqDomainPhaseGraphBoard = JXG.JSXGraph.initBoard('freqDomainPhaseGraph',
@@ -221,12 +219,11 @@ var freqDomainPhaseGraph = freqDomainPhaseGraphBoard.create('functiongraph',
             [sd.getPhaseRespFunc(), 0],
             {strokeColor:'blue', strokeWidth:2, highlight: false});
 
-freqDomainMagGraphBoard.zoom100();
 $("#freqDomainPhaseGraph").hide();
 
 var poleZeroGraphBoard = JXG.JSXGraph.initBoard('poleZeroGraph',
                                 {boundingbox:[-3, 3, 3, -3],
-                                keepaspectratio: false,
+                                keepaspectratio: true,
                                 axis: false,
                                 pan: {
                                     needShift: false,
@@ -236,6 +233,7 @@ var poleZeroGraphBoard = JXG.JSXGraph.initBoard('poleZeroGraph',
                                 showCopyright: false,
                                 showNavigation: true});
 
+graphBoardsArray.push(poleZeroGraphBoard);
 poleZeroGraphBoard.create('axis', [[0,0],[1,0]], {ticks: { minorTicks: 0, minTicksDistance: 18, insertTicks: true, ticksDistance: 1}});
 poleZeroGraphBoard.create('axis', [[0,0],[0,1]], {ticks: { minorTicks: 0, minTicksDistance: 18, insertTicks: true, ticksDistance: 1}});
 
@@ -256,9 +254,15 @@ var poleZeroPole2 = poleZeroGraphBoard.create('point',
             {fixed: true, face: "cross", label: {strokeColor: "red"}, name: "2"});
 
 // TODO: this is somehow happening before the whole graph is loaded, FIXME
-poleZeroGraphBoard.zoomElements([poleZeroCircle,poleZeroPole1, poleZeroPole2]);
-poleZeroGraphBoard.moveOrigin(poleZeroGraphBoard.containerObj.clientWidth / 2, poleZeroGraphBoard.containerObj.clientHeight / 2);
-    
+$(function () {
+    timeDomainGraphBoard.zoom100();
+    freqDomainMagGraphBoard.zoom100();
+    freqDomainMagDbGraphBoard.zoom100();
+    freqDomainPhaseGraphBoard.zoom100();    
+    poleZeroGraphBoard.zoomElements([poleZeroCircle,poleZeroPole1, poleZeroPole2]);
+    //poleZeroGraphBoard.moveOrigin(poleZeroGraphBoard.origin.scrCoords[1], poleZeroGraphBoard.canvasHeight / 2);
+});
+
 function updateSpringDynamics() {    
     timeDomainGraph.Y = selectedDynamics;
     mySpring.updateDynamics(selectedDynamics);
@@ -292,6 +296,7 @@ function updateSpringDynamics() {
     poleZeroPole1.setPosition(JXG.COORDS_BY_USER , poles[0]);
     poleZeroPole2.setPosition(JXG.COORDS_BY_USER , poles[1]);
     poleZeroGraphBoard.update();
+
     poleZeroGraphBoard.zoomElements([poleZeroCircle,poleZeroPole1, poleZeroPole2]);
     poleZeroGraphBoard.moveOrigin(poleZeroGraphBoard.origin.scrCoords[1], poleZeroGraphBoard.canvasHeight / 2);
 

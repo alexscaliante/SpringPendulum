@@ -11,7 +11,36 @@ function resize_canvas()
     renderer.setSize(canvas.width, canvas.height);
 }
 
+function resize_graphs() {
+    graphBoardsArray.forEach(function (board, index){
+        var oldWidth = board.canvasWidth;
+        var newWidth = $(board.containerObj).width();
+        var ratio = newWidth / oldWidth;
+        var oldHeight = $(board.containerObj).height();
+        var newHeight = newWidth * (2/3);
+        $(board.containerObj).height(newHeight);
+        board.renderer.resize(newWidth, newHeight);
+        var bb = board.getBoundingBox();
+        bb[2] *= ratio;
+        board.setBoundingBox(bb, board.attr.keepaspectratio);
+        board.fullUpdate();
+    });
+}
+
 $(function() {
+    $("#container").split({
+        orientation: 'vertical',
+        limit: 350,
+        position: '80%',
+        invisible: true,
+        onDrag: function () {
+            resize_canvas();
+        },
+        onDragEnd: function () {
+            resize_graphs();
+        }
+    });
+    
     $("#tabs").puiaccordion({
         activeIndex: [0,1,2,3,4],
         multiple: true
