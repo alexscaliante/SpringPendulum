@@ -335,7 +335,8 @@ function render(t) {
 
         var ut = (SpringPendulumParams.u0 * Math.sin(SpringPendulumParams.we * t ) );
         
-        ceilingMesh.position.set(0,(SpringPendulumConsts.offsetCeiling+ut),0);
+        ceilingMesh.position.set(SpringPendulumConsts.ceilingX*0.2,(SpringPendulumConsts.offsetCeiling+ut),0);
+        pushrodMesh.position.set((SpringPendulumConsts.ceilingX/2),(SpringPendulumConsts.offsetCeiling+ut)-SpringPendulumConsts.ceilingZ/2-SpringPendulumConsts.pushrodHight/2,0);
         
         var springSize = drawSpring(ut, t);
         

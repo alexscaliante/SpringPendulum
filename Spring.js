@@ -62,6 +62,8 @@ function drawSpring(ut, t)
     
     // translation
     springMesh.position.set(0,SpringPendulumConsts.offsetCeiling-SpringPendulumConsts.ceilingZ/2+ut,0);
+    springMesh.receiveShadow = true;
+    springMesh.castShadow = true;
     scene.add(springMesh);
  
     return tubeGeometry.vertices[tubeGeometry.vertices.length-1].y;
