@@ -1,12 +1,11 @@
 "use strict";
-var SpringMassSystem;
 
 Initialize();
 
 var SpringPendulumParams = {
     w0: 1.9,                            // eigen-frequency
     d : 0.1,                            // dimensionless friction constant | d > 1 means strong friction (no oscillations) and d < 1 means low friction.
-    
+
     y0: 0,//1.2,                        // initial condition - position
     v0: 0,//-1,                         // initial condition - velocity
 
@@ -19,15 +18,15 @@ SpringPendulumParams.changeParam = function(param, value) {
         this[param] = value;
     else
         return false;
-    
+
     if (param == "d" || param == "w0") {
         sd = new SpringDynamics(SpringPendulumParams.w0, SpringPendulumParams.d);
     }
-    
+
     selectedDynamics = sd.getPositionFunc(SpringPendulumParams.u0,SpringPendulumParams.we,SpringPendulumParams.y0,SpringPendulumParams.v0);
 
     return true;
-}
+};
 
 var sd = new SpringDynamics(SpringPendulumParams.w0, SpringPendulumParams.d);
 var selectedDynamics = sd.getPositionFunc(SpringPendulumParams.u0,SpringPendulumParams.we,SpringPendulumParams.y0,SpringPendulumParams.v0);
@@ -94,9 +93,19 @@ var freqDomainMagGraphBoard = JXG.JSXGraph.initBoard('freqDomainMagGraph',
                                 showNavigation: true});
 graphBoardsArray.push(freqDomainMagGraphBoard);
 
+var magRespFunc = sd.getMagRespFunc(false);
 var freqDomainMagGraph = freqDomainMagGraphBoard.create('functiongraph',
-            [sd.getMagRespFunc(false), 0],
+            [magRespFunc, 0],
             {strokeColor:'blue', strokeWidth:2, highlight: false});
+
+var freqDomainMagPoint = freqDomainMagGraphBoard.create('point',
+    [SpringPendulumParams.we, magRespFunc(SpringPendulumParams.we)],
+    {fixed: true,
+    fillColor: 'red',
+    strokeColor: 'red',
+    highlight: false,
+    withLabel: false,
+    showInfobox: false});
 
 var freqDomainMagDbGraphBoard = JXG.JSXGraph.initBoard('freqDomainMagDbGraph',
                                 {boundingbox:[-2, 50, 2, -50],
@@ -120,11 +129,12 @@ var xAxis = freqDomainMagDbGraphBoard.create('axis', [[0,0],[1,0]],
                                                 }
                                              });
 
+
 // copy from the JXGGraph source
 xAxis.defaultTicks.generateLabelText = function(tick, zero, value) {
     var Mat = JXG.Math;
     var Type = JXG;
-    
+
     var labelText,
         distance = this.getDistanceFromZero(zero, tick);
 
@@ -150,7 +160,7 @@ xAxis.defaultTicks.generateLabelText = function(tick, zero, value) {
                 labelText = labelText.replace(/\.$/, '');
             }
         }
-                
+
         if (this.visProp.scalesymbol.length > 0) {
             if (labelText === '1') {
                 labelText = this.visProp.scalesymbol;
@@ -160,13 +170,13 @@ xAxis.defaultTicks.generateLabelText = function(tick, zero, value) {
                 labelText = labelText + this.visProp.scalesymbol;
             }
         }
-        
+
         // add log scale
         labelText = '10<sup>'+ labelText + '</sup>';
     }
 
-    return labelText;    
-}
+    return labelText;
+};
 
 // create log ticks
 for(var i=2; i<10; i++)
@@ -195,15 +205,26 @@ var yAxis = freqDomainMagDbGraphBoard.create('axis', [[0,0],[0,1]],
                                              }});
 freqDomainMagDbGraphBoard.fullUpdate();
 
+
+var magRespFuncDb = sd.getMagRespFunc(true);
 var freqDomainMagDbGraph = freqDomainMagDbGraphBoard.create('curve',
                        [function(t){ return Math.LOG10E*Math.log(t);},
-                        sd.getMagRespFunc(true),
+                        magRespFuncDb,
                         -100,100],{strokeColor:'blue', strokeWidth:2, highlight: false});
+
+var freqDomainMagDbPoint = freqDomainMagDbGraphBoard.create('point',
+    [Math.LOG10E*Math.log(SpringPendulumParams.we), magRespFuncDb(SpringPendulumParams.we)],
+    {fixed: true,
+    fillColor: 'red',
+    strokeColor: 'red',
+    highlight: false,
+    withLabel: false,
+    showInfobox: false});
 
 $("#freqDomainMagDbGraph").hide();
 
 var freqDomainPhaseGraphBoard = JXG.JSXGraph.initBoard('freqDomainPhaseGraph',
-                                {boundingbox:[-10, 40, 100, -220],
+                                {boundingbox:[-0.1, 20, 10, -220],
                                 keepaspectratio: false,
                                 axis: true,
                                 grid: false,
@@ -215,9 +236,25 @@ var freqDomainPhaseGraphBoard = JXG.JSXGraph.initBoard('freqDomainPhaseGraph',
                                 showCopyright: false,
                                 showNavigation: true});
 
+var phaseRespFunc = sd.getPhaseRespFunc();
+var phaseyaxis = freqDomainPhaseGraphBoard.create('axis', [[0,0],[0,1]],
+                                             {ticks: {
+                                                insertTicks: false,
+                                                ticksDistance: 45
+                                             }});
+
+
 var freqDomainPhaseGraph = freqDomainPhaseGraphBoard.create('functiongraph',
-            [sd.getPhaseRespFunc(), 0],
+            [phaseRespFunc, 0],
             {strokeColor:'blue', strokeWidth:2, highlight: false});
+var freqDomainPhasePoint = freqDomainPhaseGraphBoard.create('point',
+    [SpringPendulumParams.we, phaseRespFunc(SpringPendulumParams.we)],
+    {fixed: true,
+    fillColor: 'red',
+    strokeColor: 'red',
+    highlight: false,
+    withLabel: false,
+    showInfobox: false});
 
 $("#freqDomainPhaseGraph").hide();
 
@@ -258,40 +295,47 @@ $(function () {
     timeDomainGraphBoard.zoom100();
     freqDomainMagGraphBoard.zoom100();
     freqDomainMagDbGraphBoard.zoom100();
-    freqDomainPhaseGraphBoard.zoom100();    
+    freqDomainPhaseGraphBoard.zoom100();
     poleZeroGraphBoard.zoomElements([poleZeroCircle,poleZeroPole1, poleZeroPole2]);
     //poleZeroGraphBoard.moveOrigin(poleZeroGraphBoard.origin.scrCoords[1], poleZeroGraphBoard.canvasHeight / 2);
 });
 
-function updateSpringDynamics() {    
+function updateSpringDynamics() {
     timeDomainGraph.Y = selectedDynamics;
     mySpring.updateDynamics(selectedDynamics);
     timeDomainGraph.updateCurve();
     //timeDomainGlider.setGliderPosition(0);
     //timeDomainExtForceGlider.setGliderPosition(0);
     timeDomainGlider.setPosition(JXG.COORDS_BY_USER,[0,selectedDynamics(0)]);
-    timeDomainExtForceGlider.setPosition(JXG.COORDS_BY_USER,[0,0]);    
+    timeDomainExtForceGlider.setPosition(JXG.COORDS_BY_USER,[0,0]);
     timeDomainGraphBoard.fullUpdate();
+
 
     if($(freqDomainMagGraphBoard.containerObj).is(":hidden") == false)
     {
         freqDomainMagGraph.Y = sd.getMagRespFunc(false);
         freqDomainMagGraph.updateCurve();
         freqDomainMagGraphBoard.update();
+        freqDomainMagPoint.setPosition(JXG.COORDS_BY_USER,[SpringPendulumParams.we,
+                                                           freqDomainMagGraph.Y(SpringPendulumParams.we)]);
     }
     else if($(freqDomainMagDbGraphBoard.containerObj).is(":hidden") == false)
     {
         freqDomainMagDbGraph.Y = sd.getMagRespFunc(true);
         freqDomainMagDbGraph.updateCurve();
-        freqDomainMagDbGraphBoard.update();    
+        freqDomainMagDbGraphBoard.update();
+        freqDomainMagDbPoint.setPosition(JXG.COORDS_BY_USER,[Math.LOG10E*Math.log(SpringPendulumParams.we),
+                                                           freqDomainMagDbGraph.Y(SpringPendulumParams.we)]);
     }
     else if($(freqDomainPhaseGraphBoard.containerObj).is(":hidden") == false)
     {
         freqDomainPhaseGraph.Y = sd.getPhaseRespFunc();
         freqDomainPhaseGraph.updateCurve();
         freqDomainPhaseGraphBoard.update();
+        freqDomainPhasePoint.setPosition(JXG.COORDS_BY_USER,[SpringPendulumParams.we,
+                                                           freqDomainPhaseGraph.Y(SpringPendulumParams.we)]);
     }
-    
+
     poles = sd.getPoles();
     poleZeroPole1.setPosition(JXG.COORDS_BY_USER , poles[0]);
     poleZeroPole2.setPosition(JXG.COORDS_BY_USER , poles[1]);
@@ -305,23 +349,23 @@ function updateSpringDynamics() {
 
 var prevtime = 0;
 function render(t) {
-    
+
     requestAnimationFrame(render);
-    
+
     if (t === undefined) {
         t = 0;
     }
-    
+
     t = t / 1000;
-    var delta = (t - prevtime);   // time step 
+    var delta = (t - prevtime);   // time step
     prevtime = t;
-    
+
     controls.update(delta);
-    
+
     //document.getElementById("debug").innerHTML = "";
-    
+
     if(runningFlag == true || staticRendered == false)
-    {        
+    {
         if(runningFlag == false && staticRendered == false)
         {
             t = 0;
@@ -334,22 +378,22 @@ function render(t) {
         }
 
         var ut = (SpringPendulumParams.u0 * Math.sin(SpringPendulumParams.we * t ) );
-        
+
         ceilingMesh.position.set(SpringPendulumConsts.ceilingX*0.2,(SpringPendulumConsts.offsetCeiling+ut),0);
         pushrodMesh.position.set((SpringPendulumConsts.ceilingX/2),(SpringPendulumConsts.offsetCeiling+ut)-SpringPendulumConsts.ceilingZ/2-SpringPendulumConsts.pushrodHight/2,0);
-        
+
         var springSize = drawSpring(ut, t);
-        
+
         if ((springSize+(SpringPendulumConsts.ceilingZ/2))>=0) { // look for the ponit where the mass hits the ceiling
             $("#dialog-message").puidialog("show"); // display a warning text
             $("#button-stop").click(); // handel this event as the Stop button was pushed
         }
-        
+
         mirrorSphere.visible = false;
         mirrorSphereCamera.updateCubeMap( renderer, scene );
         mirrorSphere.visible = true;
         mirrorSphere.position.set(0,(SpringPendulumConsts.offsetCeiling + springSize + ut - SpringPendulumConsts.ballRadius)/*(SpringConsts.springLength + (1+selectedDynamics(t/1000)) ) - 10)*/,0);
-        
+
         if(timeDomainFollow == true)
         {
             var trunkTime = Math.round(t*100)/100;
@@ -359,12 +403,12 @@ function render(t) {
             //timeDomainGlider.setGliderPosition(trunkTime);
             //timeDomainExtForceGlider.setGliderPosition(trunkTime);
             //if((t) > 10)
-            timeDomainGraphBoard.moveOrigin(timeDomainGraphBoard.containerObj.clientWidth/2 - (timeDomainGraphBoard.unitX * t), timeDomainGraphBoard.canvasHeight / 2)
+            timeDomainGraphBoard.moveOrigin(timeDomainGraphBoard.containerObj.clientWidth/2 - (timeDomainGraphBoard.unitX * t), timeDomainGraphBoard.canvasHeight / 2);
                 //timeDomainGraphBoard.moveOrigin(timeDomainGraphBoard.origin.scrCoords[1] - (timeDomainGraphBoard.unitX * delta), timeDomainGraphBoard.canvasHeight / 2);
-        }        
+        }
         //document.getElementById("debug").innerHTML = ""+selectedDynamics(t/1000)+"<br>render";
     }
-    
+
     renderer.render( scene, camera );
 }
 
